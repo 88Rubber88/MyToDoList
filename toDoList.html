@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList</title>
+    <style>
+        .delete{
+            display: flex;
+            margin-left: auto;
+            margin-right: 10px;
+            flex-direction: row-reverse;
+            justify-content: center;
+            border: none;
+            background-color: rgba(255, 0, 0, 0.299);
+            border-radius: 3px;
+            align-items: center;
+            width: 50px;
+            text-align: center;
+        }
+        body{
+            scrollbar-color: rgb(160, 131, 15);
+            scrollbar-width: thin;
+;
+        }
+        main{
+            background-color: cornsilk;
+            display: block;
+            flex-direction:row;
+            flex-wrap: no-wrap;
+            overflow-block: scroll;
+            justify-content: center;
+            width:500px;
+            height:600px;
+            border-radius: 10px;
+            padding:0px;
+            align-items: baseline;
+            border:4px solid rgba(87, 74, 18, 0.916);
+        }
+       
+        #contain-li{
+            display: block;
+            justify-content:left;
+            align-items: left;
+            margin: 0;
+            padding:0;
+        }
+        button{
+            background-color: azure;
+            border-radius: 3px;
+            box-shadow: 3px 3px 2px 1px rgba(90, 90, 91, 0.2);
+            font-size: large;
+            align-items: center;
+            justify-content: center;
+            display: inline-flex;
+            padding:3px;
+            margin: 5px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #contain-input{
+            overflow: hidden;
+            display:inline-flex;
+            justify-content:left;
+            flex-direction: row;
+            align-items: center;
+            margin:3px;
+            padding:5px;
+            background-color: rgba(187, 181, 160, 0.633);
+            width: 96%;
+        }
+        header h1{
+            align-items: center;
+            justify-content: center;
+            font-style: inherit;
+            font-size: 40px;
+            display: flex;
+            font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            letter-spacing: 20px;
+            text-transform: uppercase;
+            margin-bottom: 0px;;
+
+        }
+        p{
+            text-align: center;
+            font-style: italic;
+            font-size:12px;
+            font-family: Arial, Helvetica, sans-serif;
+            align-items: center;
+            margin-top:0px;
+        }
+        button:hover{
+            background-color: rgb(117, 123, 123);
+            color:aliceblue;}
+        ul {
+          padding-left: 0; /* Rimuove lo spazio rientrante a sinistra */
+          margin: 0;       /* Rimuove eventuali margini esterni di default */
+}
+
+        li{
+            overflow: auto;
+            list-style-type: none;
+            background-color: rgba(75, 74, 74, 0.293);
+            border-radius: 4px;
+            width:100%;
+            height: 40px;
+            margin: 6px;
+            padding: 3px;
+            align-items: center;
+            justify-content: left;
+            display: flex; 
+            font-size: 15px;
+            font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+        }
+        input{
+            border-radius: 5px;
+            width:365px;
+            height: 30px;
+            box-shadow: 3px 3px 2px 1px rgba(90, 90, 91, 0.2);
+        }
+        input::placeholder{
+            font-family:'Courier New', Courier, monospace;
+            
+            letter-spacing: 13px;
+            font-size: 10px;
+            font-style: italic;
+            font-weight: 800;
+        }
+        
+        li:hover{
+            background-color: rgba(74, 74, 74, 0.527);
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <h1>To Do List</h1>
+            <p> In this interface you can create your to do list, in order to organize your appointment , your life</p>
+        </header>
+       <!-- contenitore input -->
+       <div id="contain-input">
+          <input type="text" id="task" placeholder="insert a task..."> 
+          <button id="add">Add Task</button>
+       </div>
+
+       <!-- contenitore lista -->
+       <div id="contain-li">
+          <ul id="List"> </ul>
+       </div>
+   </main>
+
+
+
+
+   <script>
+    //Dichiarazione
+    const lista = [];
+    const task = document.getElementById('task');
+    const add = document.getElementById('add');
+    const ul = document.getElementById('List');
+    //Event Listener
+    add.addEventListener('click',()=> { 
+        aggiungiElemento();
+        visualizza();
+    });
+    ul.addEventListener('click',(event)=>{
+        const btn = event.target.closest('button');
+        if(btn){
+            const index = btn.dataset.index;
+            lista.splice(index,1);
+            visualizza();
+        };
+    });
+        
+            
+
+
+    // il core del task
+    function aggiungiElemento(){
+        const testo = task.value.trim();
+        if (testo == '') {
+            return;
+        }
+        lista.push(testo);
+        task.value = '';
+        console.log(lista);
+    }
+
+    //visualizzazione
+    function visualizza(){
+        const vuoto = '';
+        ul.innerHTML = vuoto;
+        lista.forEach((elemento,index)=>{
+            const li = document.createElement('li');
+            const span = document.createElement('span');
+            const button = document.createElement('button');
+            button.textContent = 'X';
+            button.classList.add('delete');
+            button.dataset.index = index;
+            li.textContent = elemento;
+            li.appendChild(span);
+            li.appendChild(button);
+            ul.appendChild(li);
+        });
+    }
+
+
+
+
+
+   </script>
+</body>
+</html>

@@ -4,133 +4,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDoList</title>
-    <style>
-        .delete{
-            display: flex;
-            margin-left: auto;
-            margin-right: 10px;
-            flex-direction: row-reverse;
-            justify-content: center;
-            border: none;
-            background-color: rgba(255, 0, 0, 0.299);
-            border-radius: 3px;
-            align-items: center;
-            width: 50px;
-            text-align: center;
+   <style>
+        /* =========================================
+           VARIABILI E RESET
+           Definisco qui i colori per cambiarli facilmente
+           ========================================= */
+        :root {
+            --bg-body: #f0f2f5;          /* Grigio chiarissimo per lo sfondo pagina */
+            --bg-card: #ffffff;          /* Bianco per la card principale */
+            --primary-color: #007bff;    /* Blu moderno per il bottone aggiungi */
+            --primary-hover: #0056b3;    /* Blu più scuro per l'hover */
+            --danger-color: #ff4d4d;     /* Rosso per il tasto elimina */
+            --text-main: #333333;        /* Colore testo principale */
+            --text-secondary: #666666;   /* Colore testo secondario */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Ombra morbida */
         }
-        body{
-            scrollbar-color: rgb(160, 131, 15);
-            scrollbar-width: thin;
-;
+
+        * {
+            box-sizing: border-box; /* Gestione larghezze più intuitiva */
         }
-        main{
-            background-color: cornsilk;
-            display: block;
-            flex-direction:row;
-            flex-wrap: no-wrap;
-            overflow-block: scroll;
-            justify-content: center;
-            width:500px;
-            height:600px;
-            border-radius: 10px;
-            padding:0px;
-            align-items: baseline;
-            border:4px solid rgba(87, 74, 18, 0.916);
-        }
-       
-        #contain-li{
-            display: block;
-            justify-content:left;
-            align-items: left;
-            margin: 0;
-            padding:0;
-        }
-        button{
-            background-color: azure;
-            border-radius: 3px;
-            box-shadow: 3px 3px 2px 1px rgba(90, 90, 91, 0.2);
-            font-size: large;
-            align-items: center;
-            justify-content: center;
-            display: inline-flex;
-            padding:3px;
-            margin: 5px;
+
+        /* =========================================
+           LAYOUT GENERALE
+           ========================================= */
+        body {
+            background-color: var(--bg-body);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Centra orizzontalmente */
+            align-items: center;     /* Centra verticalmente */
+            min-height: 100vh;       /* Occupa tutta l'altezza dello schermo */
         }
-        #contain-input{
-            overflow: hidden;
-            display:inline-flex;
-            justify-content:left;
-            flex-direction: row;
+
+        /* Il contenitore principale (la "card") */
+        main {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 500px;        /* Larghezza massima, si adatta su mobile */
+            height: auto;
+            min-height: 600px;
+            border-radius: 16px;     /* Bordi più arrotondati e moderni */
+            box-shadow: var(--shadow);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;  /* Ordina gli elementi in colonna */
+            border: none;            /* Rimosso il bordo spesso vecchio stile */
+        }
+
+        /* =========================================
+           HEADER
+           ========================================= */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--text-main);
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: 1px;     /* Spaziatura lettere più sobria */
+            text-transform: uppercase;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-style: normal;      /* Rimosso italico forzato */
+            line-height: 1.5;
+            margin-top: 0;
+        }
+
+        /* =========================================
+           INPUT E BOTTONI DI AGGIUNTA
+           ========================================= */
+        #contain-input {
+            background-color: transparent;
+            display: flex;
+            gap: 10px;               /* Spazio tra input e bottone */
+            padding: 0;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        /* Stile del campo di testo */
+        input {
+            flex-grow: 1;            /* Occupa tutto lo spazio disponibile */
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            outline: none;
+            box-shadow: none;        /* Rimosso ombre strane */
+            height: auto;            /* Altezza automatica basata sul padding */
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+        }
+
+        input::placeholder {
+            color: #aaa;
+            font-family: inherit;
+            letter-spacing: normal;
+            font-weight: normal;
+            font-style: normal;
+            font-size: 14px;
+        }
+
+        /* Bottone "Add Task" */
+        #add {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: none;
+            margin: 0;
+            display: flex;
             align-items: center;
-            margin:3px;
-            padding:5px;
-            background-color: rgba(187, 181, 160, 0.633);
-            width: 96%;
         }
-        header h1{
+
+        #add:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px); /* Leggero effetto sollevamento */
+        }
+
+        #add:active {
+            transform: translateY(1px);
+        }
+
+        /* =========================================
+           LISTA DEI TASK
+           ========================================= */
+        #contain-li {
+            flex-grow: 1;            /* Occupa lo spazio rimanente in altezza */
+            overflow-y: auto;        /* Abilita lo scroll solo se serve */
+            margin-top: 10px;
+            /* Personalizzazione scrollbar per renderla fine */
+            scrollbar-width: thin;
+            scrollbar-color: #ccc transparent;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Singolo elemento della lista */
+        li {
+            background-color: #fff;
+            border-bottom: 1px solid #eee; /* Separatore sottile invece del box pieno */
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Testo a sx, bottone a dx */
+            font-size: 16px;
+            color: var(--text-main);
+            font-family: inherit; /* Usa il font del body */
+            text-transform: none; /* Rimosso uppercase forzato per leggibilità */
+            letter-spacing: normal;
+            transition: background-color 0.2s;
+            width: 100%;
+            height: auto;
+            margin: 0;
+            border-radius: 0;
+        }
+
+        li:hover {
+            background-color: #f9f9f9; /* Colore hover molto leggero */
+        }
+
+        /* Bottone "X" (Delete) */
+        .delete {
+            background-color: transparent;
+            color: #ccc;
+            border: 1px solid #eee;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%; /* Tondo */
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-style: inherit;
-            font-size: 40px;
-            display: flex;
-            font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            letter-spacing: 20px;
-            text-transform: uppercase;
-            margin-bottom: 0px;;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            margin-left: 10px;
+            transition: all 0.2s;
+            flex-shrink: 0; /* Impedisce al bottone di schiacciarsi */
+        }
 
+        .delete:hover {
+            background-color: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
         }
-        p{
-            text-align: center;
-            font-style: italic;
-            font-size:12px;
-            font-family: Arial, Helvetica, sans-serif;
-            align-items: center;
-            margin-top:0px;
-        }
-        button:hover{
-            background-color: rgb(117, 123, 123);
-            color:aliceblue;}
-        ul {
-          padding-left: 0; /* Rimuove lo spazio rientrante a sinistra */
-          margin: 0;       /* Rimuove eventuali margini esterni di default */
-}
 
-        li{
-            overflow: auto;
-            list-style-type: none;
-            background-color: rgba(75, 74, 74, 0.293);
-            border-radius: 4px;
-            width:100%;
-            height: 40px;
-            margin: 6px;
-            padding: 3px;
-            align-items: center;
-            justify-content: left;
-            display: flex; 
-            font-size: 15px;
-            font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 10px;
+        /* Piccola fix per lo span vuoto generato dal JS */
+        li span {
+            display: none; 
         }
-        input{
-            border-radius: 5px;
-            width:365px;
-            height: 30px;
-            box-shadow: 3px 3px 2px 1px rgba(90, 90, 91, 0.2);
-        }
-        input::placeholder{
-            font-family:'Courier New', Courier, monospace;
-            
-            letter-spacing: 13px;
-            font-size: 10px;
-            font-style: italic;
-            font-weight: 800;
-        }
-        
-        li:hover{
-            background-color: rgba(74, 74, 74, 0.527);
-        }
+
     </style>
 </head>
 <body>
@@ -212,4 +295,5 @@
 
    </script>
 </body>
+
 </html>
